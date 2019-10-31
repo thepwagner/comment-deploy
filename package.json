@@ -1,0 +1,11 @@
+{
+  "name": "comment-deploy",
+  "version": "1.0.0",
+  "description": "GitHub Action to deploy via comment",
+  "author": "thepwagner",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^1.1.0"
+  }
+}

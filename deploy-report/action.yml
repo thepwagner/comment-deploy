@@ -1,0 +1,20 @@
+name: 'Deploy: report deployment status'
+description: 'Triggers deployments via issue comment'
+inputs:
+  TOKEN:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
+  DEPLOYMENT_ID:
+    description: 'Deployment ID to update'
+    required: true
+  ENVIRONMENT:
+    description: 'Environment being deployed to'
+    required: true
+  DEPLOYMENT_STATUS:
+    description: 'Deployment status'
+  DEPLOYMENT_LOG_PATH:
+    description: 'Path in the workspace to deployment logs'
+runs:
+  using: 'docker'
+  image: '../Dockerfile'
+  entrypoint: deploy-report
