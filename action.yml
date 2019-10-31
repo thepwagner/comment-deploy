@@ -10,6 +10,8 @@ outputs:
     description: 'Created deployment id, may be empty'
   ENVIRONMENT:
     description: 'Environment being deployed to'
+  DEPLOY_REF:
+    description: 'Ref/branch being deployed'
   DEPLOY_ARGUMENTS:
     description: 'Extra arguments passed to deploy command'
 runs:

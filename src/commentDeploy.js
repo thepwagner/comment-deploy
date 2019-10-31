@@ -50,10 +50,11 @@ async function run() {
     pull_number: eventIssue.number,
   });
   const deployArgs = (bodyMatch[2] || '').trim();
+  const { ref }  = pr.data.head;
   const createdDeployment = await octokit.repos.createDeployment({
     owner,
     repo,
-    ref: pr.data.head.ref,
+    ref,
     auto_merge: true,
     payload: {
       args: deployArgs,
@@ -73,6 +74,7 @@ async function run() {
   }
 
   core.setOutput('ENVIRONMENT', environment);
+  core.setOutput('DEPLOY_REF', ref);
   core.setOutput('DEPLOY_ARGUMENTS', deployArgs);
   core.setOutput('DEPLOYMENT_ID', createdDeployment.data.id);
 };

@@ -12,21 +12,24 @@ jobs:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ENVIRONMENTS: beta,latest
 
-    # Your deploy steps go here; this repo publishes to GPR:
+    # Your deploy steps go here; this repo publishes to GPR with an inline script:
     - name: Deployment
       id: deployment
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEPLOYMENT_ID: ${{ steps.comment.outputs.DEPLOYMENT_ID }}
         ENVIRONMENT: ${{ steps.comment.outputs.ENVIRONMENT }}
+        DEPLOY_REF: ${{ steps.comment.outputs.DEPLOY_REF }}
       run: |
         # Exit if there's no environment; a "neutral/78" exit above would be handy
         [ -z "${ENVIRONMENT}" ] && exit 0
 
         set -e
-        docker login docker.pkg.github.com -u gpr -p "$TOKEN"
-        IMG="docker.pkg.github.com/thepwagner/comment-deploy/action:${ENVIRONMENT}"
+        IMG="docker.pkg.github.com/thepwagner/comment-deploy/comment-deploy:${ENVIRONMENT}"
+        git checkout "$DEPLOY_REF"
         docker build -t "$IMG" .
+
+        docker login docker.pkg.github.com -u gpr -p "$TOKEN"
         echo ::set-output name=DEPLOYMENT_LOG_PATH,::log.txt
         (sh | tee log.txt) <<EOF
           docker push "$IMG"
