@@ -17,6 +17,7 @@ jobs:
       id: deployment
       env:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         DEPLOYMENT_ID: ${{ steps.comment.outputs.DEPLOYMENT_ID }}
         ENVIRONMENT: ${{ steps.comment.outputs.ENVIRONMENT }}
         DEPLOY_REF: ${{ steps.comment.outputs.DEPLOY_REF }}
@@ -25,11 +26,11 @@ jobs:
         [ -z "${ENVIRONMENT}" ] && exit 0
 
         set -e
-        IMG="docker.pkg.github.com/thepwagner/comment-deploy/comment-deploy:${ENVIRONMENT}"
+        IMG="thepwagner/comment-deploy:${ENVIRONMENT}"
         git checkout "$DEPLOY_REF"
         docker build -t "$IMG" .
 
-        docker login docker.pkg.github.com -u gpr -p "$TOKEN"
+        docker login -u thepwagner -p "$DOCKERHUB_PASSWORD"
         echo ::set-output name=DEPLOYMENT_LOG_PATH,::log.txt
         (sh | tee log.txt) <<EOF
           docker push "$IMG"
