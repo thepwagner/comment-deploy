@@ -6,9 +6,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     # Filter comments that trigger a deploy:
-    - uses: ./
+    - uses: docker://thepwagner/comment-deploy:latest
       id: comment
       with:
+        entrypoint: comment-deploy
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ENVIRONMENTS: beta,latest
 
@@ -39,12 +40,12 @@ jobs:
         echo ::set-output name=DEPLOYMENT_STATUS,::success
 
     # If deploy succeeds/fails, always report status:
-    - uses: ./deploy-report/
+    - uses: docker://thepwagner/comment-deploy:latest
       if: always()
       with:
+        entrypoint: deploy-report
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEPLOYMENT_ID: ${{ steps.comment.outputs.DEPLOYMENT_ID }}
         ENVIRONMENT: ${{ steps.comment.outputs.ENVIRONMENT }}
         DEPLOYMENT_STATUS: ${{ steps.deployment.outputs.DEPLOYMENT_STATUS }}
         DEPLOYMENT_LOG_PATH: ${{ steps.deployment.outputs.DEPLOYMENT_LOG_PATH }}
-
