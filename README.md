@@ -38,7 +38,7 @@ jobs:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ENVIRONMENTS: staging,production
 
-    # Your deploy steps go here; this repo publishes to GPR with an inline script:
+    # Deployment step:
     - name: Deployment
       id: deployment
       env:
